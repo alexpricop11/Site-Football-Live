@@ -3,7 +3,7 @@ from django.views.generic.base import RedirectView
 from . import views
 
 urlpatterns = [
-    path('', views.list_matches, name="FOOTBALL LIVE"),
+    path('', views.match_list, name="FOOTBALL LIVE"),
     path('live/<int:match_id>/', views.match_live, name='live_match'),
 ]
 
