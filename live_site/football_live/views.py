@@ -2,10 +2,11 @@
 from datetime import datetime, timezone
 import requests
 from django.shortcuts import render, get_object_or_404
+from .forms import MatchForm
 from .models import Match
 
 
-class MatchLive:
+class MatchList:
     def __init__(self):
         self.api_url = "https://api.football-data.org/v4/matches"
         self.headers = {"X-Auth-Token": "e6952e6811684b4bb29ece2463aa5d16"}
@@ -18,30 +19,32 @@ class MatchLive:
 
     @staticmethod
     def info_match(match):
-        home_team = match.get('homeTeam', {}).get('name', '')
-        away_team = match.get('awayTeam', {}).get('name', '')
-        match_datetime_str = match.get('utcDate')
+        home_team = match.get('homeTeam').get('name')
+        away_team = match.get('awayTeam').get('name')
         live_match = match.get('liveStream', {}).get('url')
-        if match.get('status') == "Live" or match.get('status') == "Finisat":
-            score_home = match.get('score', {}).get('fullTime', {}).get('home', 0)
-            score_away = match.get('score', {}).get('fullTime', {}).get('away', 0)
-        else:
-            score_home = score_away = ''
+        match_datetime_str = match.get('utcDate')
         if match_datetime_str:
             match_datetime = datetime.strptime(match_datetime_str, "%Y-%m-%dT%H:%M:%S%z")
             if match_datetime > datetime.now(timezone.utc):
                 match_status = 'Urmeaza'
-            elif datetime.now(timezone.utc) >= match_datetime:
+            elif datetime.now(timezone.utc) == match_datetime:
                 match_status = 'Live'
             else:
                 match_status = "Incheiat"
         else:
             match_status = "N/A"
 
+        if match_status == "Live" or match_status == "Incheiat":
+            score_home = match.get('score', {}).get('fullTime', {}).get('home')
+            score_away = match.get('score', {}).get('fullTime', {}).get('away')
+            score = f"{score_home} - {score_away}"
+        else:
+            score = ''
+
         return {
             'home_team': home_team,
             'away_team': away_team,
-            'score': f"{score_home} - {score_away}",
+            'score': score,
             'match_datetime': match_datetime,
             'live_match': live_match,
             'match_status': match_status,
@@ -56,11 +59,20 @@ class MatchLive:
 
 
 def match_list(request):
-    manager = MatchLive()
-    matches = manager.list_matches()
-    return render(request, 'list_of_matches.html', {'matches': matches})
+    match = MatchList()
+    matches = match.list_matches()
+    form = MatchForm()
+    return render(request, 'list_of_matches.html', {'matches': matches, 'form': form})
 
 
-def match_live(request, match_id):
-    match = get_object_or_404(Match, id=match_id)
-    return render(request, 'live_match.html', {'match': match})
+class MatchLive:
+    @staticmethod
+    def match_live(request, match_id):
+        match = get_object_or_404(Match, id=match_id)
+        goals_home = match.goals_home.all()
+        goals_away = match.goals_away.all()
+        scorers_home = [goal.scorer for goal in goals_home]
+        scorers_away = [goal.scorer for goal in goals_away]
+        return render(request, 'live_match.html',
+                      {'match': match, 'scorers_home': scorers_home, 'scorers_away': scorers_away})
+

@@ -1,73 +1,29 @@
-<!-- templates/list_of_matches.html -->
 <!DOCTYPE html>
 <html lang="ro">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FOOTBALL LIVE</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #1a1a1a;
-            color: #ffffff;
-            margin: 20px;
-            text-align: center;
-        }
-
-        h1 {
-            color: #009933;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-            margin-top: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-        }
-
-        li {
-            background-color: #2c2c2c;
-            margin: 10px 0;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            width: 30%;
-        }
-
-        a {
-            color: #4db8ff;
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .live-link {
-            color: #4db8ff;
-        }
-    </style>
+    <title>Pagina Principala</title>
 </head>
 <body>
-    <h1>FOOTBALL LIVE</h1>
+    <h1>List of Matches</h1>
     <ul>
         {% for match in matches %}
             <li>
-                <strong style="color: #4db8ff;">{{ match.home_team }}</strong> vs <strong style="color: #4db8ff;">{{ match.away_team }}</strong>
-                <div style="color: #ffffff;">{{ match.score }}</div>
-                <div style="color: #ffffff;">{{ match.match_datetime|date:"Y-m-d H:i" }}</div>
-                {% if match.match_status == 'Live' %}
-                    <span style="color: #ff4d4d;">{{ match.match_status }}</span>
-                    {% if match.live_match %}
-                        (<a href="{% url 'live_match' match_id=match.id %}" class="live-link" target="_blank">Urmărește live</a>)
-                    {% endif %}
-                {% elif match.match_status == 'Urmeaza' %}
-                    <span style="color: #ffd633;">{{ match.match_status }}</span>
-                {% elif match.match_status == 'Incheiat' %}
-                    <span style="color: #2ecc71;">{{ match.match_status }}</span>
+                {{ match.home_team }} vs {{ match.away_team }}
+                <br>
+                {{ match.match_datetime }}
+                <br>
+                {% if match.score %}
+                    Score: {{ match.score }}
+                    <br>
+                {% else %}
+                    Score: -:-
+                    <br>
+                {% endif %}
+                {{ match.match_status }}
+                {% if match.live_match %}
+                    <br>
+                    <a href="{{ match.live_match }}">Urmărește live</a>
                 {% endif %}
             </li>
         {% endfor %}

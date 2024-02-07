@@ -4,7 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.match_list, name="FOOTBALL LIVE"),
-    path('live/<int:match_id>/', views.match_live, name='live_match'),
+    path('live/<int:match_id>/', views.match_list, name='live_match'),
 ]
 
 
