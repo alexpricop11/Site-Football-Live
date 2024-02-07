@@ -75,4 +75,3 @@ class MatchLive:
         scorers_away = [goal.scorer for goal in goals_away]
         return render(request, 'live_match.html',
                       {'match': match, 'scorers_home': scorers_home, 'scorers_away': scorers_away})
-

@@ -5,7 +5,7 @@
     <title>Pagina Principala</title>
 </head>
 <body>
-    <h1>List of Matches</h1>
+    <h1>Lista de Meciuri</h1>
     <ul>
         {% for match in matches %}
             <li>
@@ -17,7 +17,7 @@
                     Score: {{ match.score }}
                     <br>
                 {% else %}
-                    Score: -:-
+                    Score:
                     <br>
                 {% endif %}
                 {{ match.match_status }}

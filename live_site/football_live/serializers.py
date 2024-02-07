@@ -1,8 +1,8 @@
 from rest_framework import serializers
-from .models import Team
+from .models import Match
 
 
-class TeamSerializer(serializers.ModelSerializer):
+class MatchSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Team
-        fields = ['name', 'logo_url']
+        model = Match
+        fields = ['id', 'home_team', 'away_team', 'data', 'score', 'live_match', 'match_status']
