@@ -12,66 +12,88 @@
             margin: 0;
             padding: 0;
         }
+
         .container {
-            max-width: 800px;
+            max-width: 100%;
             margin: 20px auto;
             padding: 20px;
             background-color: #333;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
         }
+
         h1 {
             color: #fff;
             text-align: center;
             margin-bottom: 20px;
         }
-        .match {
-            border-bottom: 1px solid #666;
-            padding: 20px 0;
-            margin-bottom: 20px;
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
         }
-        .match h2 {
+
+        li {
+            border-bottom: 1px solid #666;
+            padding: 20px;
+            margin-bottom: 20px;
+            flex: 1 0 45%;
+        }
+
+        li h2 {
             font-size: 20px;
             margin-bottom: 5px;
             color: #f0f0f0;
         }
-        .match p {
+
+        li p {
             margin: 5px 0;
         }
+
         .status-live {
             color: #ff0000;
         }
+
         .status-finished {
             color: #42f554;
         }
+
         .status-scheduled {
             color: #4287f5;
         }
+
         .score {
             font-weight: bold;
             font-size: 18px;
         }
+
         a {
             text-decoration: none;
             color: #42a5f5;
         }
+
         a:hover {
             text-decoration: underline;
+        }
+
+        @media screen and (max-width: 600px) {
+            li {
+                flex-basis: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>FOOTBALL LIVE</h1>
+<div class="container">
+    <h1>FOOTBALL LIVE</h1>
+    <ul>
         {% for match in matches %}
-            <div class="match">
-                <h2>Liga: {{ match.competition }}</h2>
+            <li>
+                <h2>{{ match.competition }}</h2>
                 <p>{{ match.team_home }} vs {{ match.teams_away }}</p>
-                <p>{{ match.match_datetime }}</p>
-                {% if match.minutes %}
-                    <p>Minute jucate: {{ match.minutes }}</p>
-                {% endif %}
-                <p class="score">Scorul: {{ match.score }}</p>
                 <p class="{% if match.match_status == 'IN_PLAY' %} status-live
                            {% elif match.match_status == 'FINISHED' %} status-finished
                            {% elif match.match_status == 'SCHEDULED' %} status-scheduled
@@ -84,11 +106,17 @@
                         Urmează
                     {% endif %}
                 </p>
+                <p>{{ match.match_datetime }}</p>
+                {% if match.minutes %}
+                    <p>Minute jucate: {{ match.minutes }}</p>
+                {% endif %}
+                <p class="score">Scorul: {{ match.score }}</p>
                 {% if match.live_match %}
                     <p><a href="{{ match.live_match }}">Urmărește Live</a></p>
                 {% endif %}
-            </div>
+            </li>
         {% endfor %}
-    </div>
+    </ul>
+</div>
 </body>
 </html>
