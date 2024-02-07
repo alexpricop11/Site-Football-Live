@@ -1,5 +1,6 @@
 # views.py
-from datetime import datetime, timezone
+from datetime import datetime
+
 import requests
 from django.shortcuts import render, get_object_or_404
 from .forms import MatchForm
@@ -19,35 +20,30 @@ class MatchList:
 
     @staticmethod
     def info_match(match):
-        home_team = match.get('homeTeam').get('name')
-        away_team = match.get('awayTeam').get('name')
-        live_match = match.get('liveStream', {}).get('url')
-        match_datetime_str = match.get('utcDate')
-        if match_datetime_str:
-            match_datetime = datetime.strptime(match_datetime_str, "%Y-%m-%dT%H:%M:%S%z")
-            if match_datetime > datetime.now(timezone.utc):
-                match_status = 'Urmeaza'
-            elif datetime.now(timezone.utc) == match_datetime:
-                match_status = 'Live'
-            else:
-                match_status = "Incheiat"
-        else:
-            match_status = "N/A"
-
-        if match_status == "Live" or match_status == "Incheiat":
+        competition = match.get('competition', {}).get('name')
+        team_home = match.get('homeTeam').get('name')
+        teams_away = match.get('awayTeam').get('name')
+        match_date = match.get('utcDate')
+        if match_date:
+            data = datetime.strptime(match_date, "%Y-%m-%dT%H:%M:%S%z")
+        match_status = match.get('status')
+        if match_status == "IN_PLAY" or match_status == "FINISHED":
             score_home = match.get('score', {}).get('fullTime', {}).get('home')
             score_away = match.get('score', {}).get('fullTime', {}).get('away')
+            minutes = match.get('minute') if match_status == 'IN_PLAY' else ''
             score = f"{score_home} - {score_away}"
         else:
             score = ''
-
+        live_match = match.get('liveStream', {}).get('url')
         return {
-            'home_team': home_team,
-            'away_team': away_team,
+            'competition': competition,
+            'team_home': team_home,
+            'teams_away': teams_away,
+            'minutes': minutes,
             'score': score,
-            'match_datetime': match_datetime,
-            'live_match': live_match,
+            'match_datetime': data,
             'match_status': match_status,
+            'live_match': live_match,
         }
 
     def list_matches(self):

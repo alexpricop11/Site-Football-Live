@@ -5,4 +5,4 @@ from .models import Match
 class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         model = Match
-        fields = ['id', 'home_team', 'away_team', 'data', 'score', 'live_match', 'match_status']
+        fields = ['id', 'competition', 'teams', 'data', 'minute', 'score', 'live_match']

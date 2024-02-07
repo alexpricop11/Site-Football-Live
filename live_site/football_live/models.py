@@ -3,15 +3,16 @@ from django.db import models
 
 
 class Match(models.Model):
-    home_team = models.CharField(max_length=100, default='')
-    away_team = models.CharField(max_length=100, default='')
+    competition = models.CharField(max_length=200, default='')
+    teams = models.CharField(max_length=255, default='')
     data = models.DateTimeField('utcDate')
     score = models.CharField(max_length=70, default='')
+    minute = models.DateTimeField(auto_now=True)
     live_match = models.URLField(default='')
     objects = models.Manager()
 
     def __str__(self):
-        return f'{self.home_team} {self.score} {self.away_team}'
+        return f'{self.competition}, {self.teams}, {self.score}'
 
 
 class Team(models.Model):
