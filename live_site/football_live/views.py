@@ -11,7 +11,7 @@ class MatchList:
         self.api_url = "https://api.football-data.org/v4/matches"
         self.headers = {"X-Auth-Token": "e6952e6811684b4bb29ece2463aa5d16"}
 
-    def get_live_matches(self):
+    def get_matches(self):
         response = requests.get(self.api_url, headers=self.headers)
         if response.status_code == 200:
             return response.json().get('matches', [])
@@ -46,7 +46,7 @@ class MatchList:
         }
 
     def list_matches(self):
-        api_matches = self.get_live_matches()
+        api_matches = self.get_matches()
         matches = [self.info_match(match) for match in api_matches]
         if not matches:
             matches.append({'message': 'Nu exista meciuri disponibile'})
