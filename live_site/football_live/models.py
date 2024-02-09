@@ -11,8 +11,11 @@ class Match(models.Model):
     live_match = models.URLField(default='')
     objects = models.Manager()
 
+    def __repr__(self):
+        return f'{self.competition}, {self.teams},{self.score},{self.data},{self.minute}'
+
     def __str__(self):
-        return f'{self.competition}, {self.teams}, {self.score}'
+        return f'{self.competition}, {self.teams}'
 
 
 class Team(models.Model):

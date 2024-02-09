@@ -94,26 +94,24 @@
             <li>
                 <h2>{{ match.competition }}</h2>
                 <p>{{ match.team_home }} vs {{ match.teams_away }}</p>
+                <p>{{ match.match_datetime }}</p>
+                <p class="score">Scorul: {{ match.score }}</p>
                 <p class="{% if match.match_status == 'IN_PLAY' %} status-live
                            {% elif match.match_status == 'FINISHED' %} status-finished
-                           {% elif match.match_status == 'SCHEDULED' %} status-scheduled
+                           {% elif match.match_status == 'TIMED' %} status-scheduled
+                           {% elif match.match_status == 'PAUSED' %} status-scheduled
                            {% endif %}">
                     {% if match.match_status == 'IN_PLAY' %}
                         Live
+                        <a href="{{ match.live_match }}">Urmărește Live</a>
                     {% elif match.match_status == 'FINISHED' %}
                         Finisat
-                    {% elif match.match_status == 'SCHEDULED' %}
+                    {% elif match.match_status == 'TIMED' %}
                         Urmează
+                    {% elif match.match_status == 'PAUSED' %}
+                        Pauza
                     {% endif %}
                 </p>
-                <p>{{ match.match_datetime }}</p>
-                {% if match.minutes %}
-                    <p>Minute jucate: {{ match.minutes }}</p>
-                {% endif %}
-                <p class="score">Scorul: {{ match.score }}</p>
-                {% if match.live_match %}
-                    <p><a href="{{ match.live_match }}">Urmărește Live</a></p>
-                {% endif %}
             </li>
         {% endfor %}
     </ul>

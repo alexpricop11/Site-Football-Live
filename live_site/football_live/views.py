@@ -29,7 +29,6 @@ class MatchList:
         if match_status == "IN_PLAY" or match_status == "FINISHED":
             score_home = match.get('score', {}).get('fullTime', {}).get('home')
             score_away = match.get('score', {}).get('fullTime', {}).get('away')
-            minutes = match.get('minute') if match_status == 'IN_PLAY' else ''
             score = f"{score_home} - {score_away}"
         else:
             score = ''
@@ -38,7 +37,6 @@ class MatchList:
             'competition': competition,
             'team_home': team_home,
             'teams_away': teams_away,
-            'minutes': minutes,
             'score': score,
             'match_datetime': data,
             'match_status': match_status,
