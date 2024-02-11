@@ -1,46 +1,44 @@
 # views.py
-from datetime import datetime
 import requests
-from django.shortcuts import render, get_object_or_404
-from .forms import MatchForm
-from .models import Match
+from django.shortcuts import render
 
 
 class MatchList:
     def __init__(self):
-        self.api_url = "https://api.football-data.org/v4/matches"
-        self.headers = {"X-Auth-Token": "e6952e6811684b4bb29ece2463aa5d16"}
+        self.api_url = "https://football-live-stream-api.p.rapidapi.com/index.php"
+        self.headers = {
+            "X-RapidAPI-Key": "6ac7c55484msh6892bddfe94b441p19d41cjsnaa77538b0915",
+            "X-RapidAPI-Host": "football-live-stream-api.p.rapidapi.com"
+        }
 
     def get_matches(self):
         response = requests.get(self.api_url, headers=self.headers)
         if response.status_code == 200:
-            return response.json().get('matches', [])
+            data = response.json()
+            if isinstance(data, list):
+                return data
+            elif isinstance(data, dict):
+                return data.get('matchId', [])
         return []
 
     @staticmethod
     def info_match(match):
-        competition = match.get('competition', {}).get('name')
-        team_home = match.get('homeTeam').get('name')
-        teams_away = match.get('awayTeam').get('name')
-        match_date = match.get('utcDate')
-        if match_date:
-            data = datetime.strptime(match_date, "%Y-%m-%dT%H:%M:%S%z")
-        match_status = match.get('status')
-        if match_status == "IN_PLAY" or match_status == "FINISHED":
-            score_home = match.get('score', {}).get('fullTime', {}).get('home')
-            score_away = match.get('score', {}).get('fullTime', {}).get('away')
-            score = f"{score_home} - {score_away}"
-        else:
-            score = ''
-        live_match = match.get('liveStream', {}).get('url')
+        league = match.get('league')
+        home_team = match.get('home_name')
+        away_team = match.get('away_name')
+        home_flag = match.get('home_flag')
+        away_flag = match.get('away_flag')
+        time = match.get('time')
+        status = match.get('status')
+
         return {
-            'competition': competition,
-            'team_home': team_home,
-            'teams_away': teams_away,
-            'score': score,
-            'match_datetime': data,
-            'match_status': match_status,
-            'live_match': live_match,
+            'league': league,
+            'home_team': home_team,
+            'away_team': away_team,
+            'home_flag': home_flag,
+            'away_flag': away_flag,
+            'time': time,
+            'status': status,
         }
 
     def list_matches(self):
@@ -54,17 +52,4 @@ class MatchList:
 def match_list(request):
     match = MatchList()
     matches = match.list_matches()
-    form = MatchForm()
-    return render(request, 'list_of_matches.html', {'matches': matches, 'form': form})
-
-
-class MatchLive:
-    @staticmethod
-    def match_live(request, match_id):
-        match = get_object_or_404(Match, id=match_id)
-        goals_home = match.goals_home.all()
-        goals_away = match.goals_away.all()
-        scorers_home = [goal.scorer for goal in goals_home]
-        scorers_away = [goal.scorer for goal in goals_away]
-        return render(request, 'live_match.html',
-                      {'match': match, 'scorers_home': scorers_home, 'scorers_away': scorers_away})
+    return render(request, 'home.html', {'matches': matches})

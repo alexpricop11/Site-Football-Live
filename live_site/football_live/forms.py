@@ -5,4 +5,4 @@ from .models import Match
 class MatchForm(forms.ModelForm):
     class Meta:
         model = Match
-        fields = ['competition', 'teams', 'data', 'score', 'live_match']
+        fields = '__all__'

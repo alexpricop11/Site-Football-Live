@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOOTBALL LIVE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .match {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .league {
+            font-weight: bold;
+        }
+        .team {
+            margin-top: 5px;
+        }
+        .time {
+            margin-top: 5px;
+            color: #666;
+        }
+        .status {
+            margin-top: 5px;
+            color: green;
+            font-weight: bold;
+        }
+        .message {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>FOOTBALL LIVE</h1>
+    {% if matches %}
+        {% for match in matches %}
+            <div class="match">
+                <p class="league">Liga: {{ match.league }}</p>
+                <p class="team">{{ match.home_team }} vs {{ match.away_team }}</p>
+                <p class="time">{{ match.time }}</p>
+                <p class="status">{{ match.status }}</p>
+                {% if match.status == 'Live' %}
+                    <p class="live-link"><a href="pagina_live/">Vizionați live</a></p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% else %}
+        <p class="message">Nu există meciuri disponibile.</p>
+    {% endif %}
+</body>
+</html>

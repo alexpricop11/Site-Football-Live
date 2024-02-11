@@ -5,4 +5,4 @@ from .models import Match
 
 @admin.register(Match)
 class MatchAdmin(admin.ModelAdmin):
-    list_display = ('competition', 'teams', 'data', 'minute', 'score', 'live_match')
+    list_display = ('league', 'home_team', 'away_team', 'time', 'status')
