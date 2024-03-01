@@ -14,4 +14,4 @@ class Match(models.Model):
         return f'{self.league}, {self.home_team},{self.away_team},{self.time}'
 
     def __str__(self):
-        return f'{self.league}, {self.home_team},{self.away_team}'
+        return repr
